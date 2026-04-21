@@ -13,7 +13,7 @@ public class Carta {
 		return suit;
 	}
 
-	public Valor getValue() {
+	public Valor getPoints() {
 		return value;
 	}
 

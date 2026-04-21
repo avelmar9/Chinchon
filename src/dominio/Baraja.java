@@ -1,6 +1,7 @@
 package dominio;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Baraja {
@@ -17,5 +18,13 @@ public class Baraja {
 				cards.add(new Carta(tipo, valor));
 			}
 		}
+		shuffle();
 	}
+	
+	public void shuffle() {
+		Collections.shuffle(cards);
+	}
+	public int size() {
+        return cards.size();
+    }
 }

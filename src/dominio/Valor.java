@@ -2,7 +2,7 @@ package dominio;
 
 public enum Valor {
 	UNO("Uno", 1), DOS("Dos", 2), TRES("Tres", 3), CUATRO("Cuatro", 4), CINCO("Cinco", 5), SEIS("Seis", 6),
-	SIETE("Siete", 7), OCHO("Ocho", 8), NUEVE("Nueve", 9), DIEZ("Sota", 10), ONCE("Caballo", 11), DOCE("Rey", 12);
+	SIETE("Siete", 7), DIEZ("Sota", 10), ONCE("Caballo", 11), DOCE("Rey", 12);
 
 	private String str;
 	private int value;
