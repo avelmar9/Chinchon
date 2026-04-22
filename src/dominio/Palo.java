@@ -3,7 +3,7 @@ package dominio;
 public enum Palo {
 	BASTOS("🦯"), COPAS("🍷"), OROS("🥇"), ESPADAS("⚔️");
 
-	private String symbol;
+	private final String symbol;
 
 	Palo(String symbol) {
 		this.symbol = symbol;
