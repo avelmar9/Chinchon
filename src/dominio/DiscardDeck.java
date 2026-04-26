@@ -4,22 +4,22 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 
-public class BarajaDescarte {
-	private Deque<Carta> pile = new ArrayDeque<>();
-	private Carta topCard;
+public class DiscardDeck {
+	private Deque<Card> pile = new ArrayDeque<>();
+	private Card topCard;
 
-    public void push(Carta card) { //añadir carta encima de la baraaja de descarte
+    public void push(Card card) { //añadir carta encima de la baraaja de descarte
         pile.push(card);
         topCard= card;
     }
 
-    public Carta peek() { //devuelve la carta de arriba
+    public Card peek() { //devuelve la carta de arriba
         if (pile.isEmpty()) throw new IllegalStateException("La baraja de descarte está vacía.");
         return topCard;
     }
 
-    public Carta pop() { //quita y guarda la carta de arriba
-    	Carta removed;
+    public Card pop() { //quita y guarda la carta de arriba
+    	Card removed;
         if (pile.isEmpty()) throw new IllegalStateException("La baraja de descarte está vacía.");
         removed=pile.pop();
         topCard=pile.isEmpty() ? null:pile.peek();

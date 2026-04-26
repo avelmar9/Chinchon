@@ -1,19 +1,19 @@
 package dominio;
 
-public class Carta {
-	private Palo suit;
-	private Valor value;
+public class Card {
+	private Suit suit;
+	private Value value;
 
-	public Carta(Palo suit, Valor value) {
+	public Card(Suit suit, Value value) {
 		this.suit = suit;
 		this.value = value;
 	}
 
-	public Palo getSuit() {
+	public Suit getSuit() {
 		return suit;
 	}
 
-	public Valor getPoints() {
+	public Value getNumber() {
 		return value;
 	}
 

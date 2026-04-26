@@ -1,12 +1,21 @@
 package app;
 
-import dominio.GestorPartidaBuilder;
+import dominio.GameSetUp;
 
 public class Main {
 
 	public static void main(String[] args) {
-		GestorPartidaBuilder gestor= new GestorPartidaBuilder(3,1,100);
-		
+		System.out.println("========================================================================");
+		System.out.println();
+		System.out.println("-------   |     |   *   |*    |   -------   |	  |   -------   |*    |");
+		System.out.println("|         |     |   |   | *   |   |         |     |   |     |   | *   |");
+		System.out.println("|         |-----|   |   |  *  |   |         |-----|   |     |   |  *  |");
+		System.out.println("|         |     |   |   |   * |   |         |     |   |     |   |   * |");
+		System.out.println("-------   |     |   |   |    *|   -------   |     |   -------   |    *|");
+		System.out.println();
+		System.out.println("========================================================================");
+		Game chinchon= new GameSetUp().configure();
+		chinchon.start();
 	}
 
 }

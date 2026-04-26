@@ -1,11 +1,11 @@
 package dominio;
 
-public enum Palo {
+public enum Suit {
 	BASTOS("🦯"), COPAS("🍷"), OROS("🥇"), ESPADAS("⚔️");
 
 	private final String symbol;
 
-	Palo(String symbol) {
+	Suit(String symbol) {
 		this.symbol = symbol;
 	}
 
