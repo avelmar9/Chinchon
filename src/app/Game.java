@@ -115,8 +115,9 @@ public class Game {
 	}
 
 	private Player getChinchonWinner() {
+		int roundNumber;
 		for (Player player : players) {
-			if (new CombinationValidator().isChinchon(player.getHand().getHand())) {
+			if (new CombinationValidator().isChinchon(player.getHand().getHand(),roundNumber)) {
 				return player;
 			}
 		}

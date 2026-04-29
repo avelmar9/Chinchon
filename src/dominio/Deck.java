@@ -11,11 +11,11 @@ public class Deck {
 		this.cards = new ArrayList<Card>();
 		
 		 for (int d = 0; d < numDecks; d++) {
-		        inicializarMazo();
+		        initializeDeck();
 		    }
 	}
 
-	private void inicializarMazo() {
+	private void initializeDeck() {
 		for (Suit tipo : Suit.values()) {
 			for (Value valor : Value.values()) {
 				cards.add(new Card(tipo, valor));
@@ -36,4 +36,9 @@ public class Deck {
 	public boolean isEmpty() {
 	    return cards.isEmpty();
 	}
+
+	public List<Card> getCards() {
+		return cards;
+	}
+
 }

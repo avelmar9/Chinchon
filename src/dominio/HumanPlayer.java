@@ -9,33 +9,23 @@ public class HumanPlayer extends Player {
 		super(name);
 	}
 
-	@Override
-	public boolean playTurn(Deck deck, DiscardDeck discard, int roundNumber) {
-		System.out.printf("%nTurno de %s:%n", name);
+	
 
-		if (takingPhase(deck, discard, roundNumber)) {
-			return true;
-		}
-		return closingPhase(discard, roundNumber);
-	}
-
-	private boolean takingPhase(Deck deck, DiscardDeck discard, int roundNumber) {
+	public boolean takingPhase(Deck deck, DiscardDeck discard, int roundNumber) {
 		ConsoleInput input = ConsoleInput.getInstance();
 		int option;
 		Card taken;
 
 		hand.showCards();
 
-		if (new CombinationValidator().isChinchon(hand.getHand())) {
-			if (roundNumber == 1) {
-				System.out.println("Tienes chinchón pero no puedes usarlo en la primera ronda.");
-			} else {
+		if (new CombinationValidator().isChinchon(hand.getHand(), roundNumber)) {
+			 
 				System.out.println("¡CHINCHÓN! Ganas la partida.");
 				lastCombination = new ArrayList<>();
 				lastCombination.add(new ArrayList<>(hand.getHand()));
 				return true;
 			}
-		}
+		
 
 		System.out.printf("Carta visible del descarte: %s%n", discard.getTopCardStr());
 		System.out.println("¿De dónde robas?");
@@ -51,7 +41,7 @@ public class HumanPlayer extends Player {
 		return false;
 	}
 
-	private boolean closingPhase(DiscardDeck discard, int roundNumber) {
+	public boolean closingPhase(DiscardDeck discard, int roundNumber) {
 		ConsoleInput input = ConsoleInput.getInstance();
 		List<List<Card>> groups;
 		int option;

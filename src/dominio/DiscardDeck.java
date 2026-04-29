@@ -1,6 +1,7 @@
 package dominio;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 
 
@@ -8,17 +9,17 @@ public class DiscardDeck {
 	private Deque<Card> pile = new ArrayDeque<>();
 	private Card topCard;
 
-    public void push(Card card) { //añadir carta encima de la baraaja de descarte
+    public void push(Card card) {
         pile.push(card);
         topCard= card;
     }
 
-    public Card peek() { //devuelve la carta de arriba
+    public Card peek() {
         if (pile.isEmpty()) throw new IllegalStateException("La baraja de descarte está vacía.");
         return topCard;
     }
 
-    public Card pop() { //quita y guarda la carta de arriba
+    public Card pop() {
     	Card removed;
         if (pile.isEmpty()) throw new IllegalStateException("La baraja de descarte está vacía.");
         removed=pile.pop();
@@ -29,7 +30,16 @@ public class DiscardDeck {
         return pile.isEmpty();
     }
 
-    public String getTopCardStr() {
+    public ArrayList<Card> getDiscard() {
+    	
+    	ArrayList<Card> discard= new ArrayList<>();
+    	for(Card card: pile) {
+    		discard.add(card);
+    	}
+		return discard ;
+	}
+
+	public String getTopCardStr() {
         return topCard != null ? topCard.toString() : "El montón de descarte está vacío.";
     }
 }

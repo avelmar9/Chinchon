@@ -57,9 +57,13 @@ public class CombinationValidator {
 	    return true;
 	}
 
-	public boolean isChinchon(List<Card> cards) {
-		List<List<Card>> group;
+	public boolean isChinchon(List<Card> cards, int roundNumber) {
 		
+		List<List<Card>> group;
+		if(roundNumber==1) {
+			System.out.println("Tienes chinchón pero no puedes usarlo en la primera ronda.");
+			return false;
+		}
 		if (cards.size() != 7) {
 			return false;
 		}
