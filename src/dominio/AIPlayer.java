@@ -25,8 +25,8 @@ public class AIPlayer extends Player {
 
     /**
      * Fase de robo de la IA.
-     * Compara los puntos sueltos que tendría con la carta del descarte
-     * frente a la carta del mazo, y elige la opción que menos puntos deja sueltos.
+     * Evalúa si la carta visible del descarte mejora su mano reduciendo los puntos 
+     * de las cartas no combinadas. Si mejora, roba del descarte; si no, roba del mazo
      * Después comprueba si tiene chinchón.
      *
      * @param deck        mazo principal
@@ -37,27 +37,22 @@ public class AIPlayer extends Player {
     @Override
     protected boolean takingPhase(Deck deck, DiscardDeck discard, int roundNumber) {
         Card topDiscard;
-        Card deckCard;
-        int pointsWith;
-        int pointsWithDeck;
+        int pointsWithDiscard;
+        int currentPoints;
 
         topDiscard = discard.peek();
-
+        currentPoints = uncombinedPoints();
+        
         hand.addCard(topDiscard);
-        pointsWith = uncombinedPoints();
+        pointsWithDiscard = uncombinedPoints();
         hand.removeCard(hand.numCards() - 1);
 
-        deckCard = deck.takeCard();
-        hand.addCard(deckCard);
-        pointsWithDeck = uncombinedPoints();
-        hand.removeCard(hand.numCards() - 1);
-
-        if (pointsWith < pointsWithDeck) {
+        if (pointsWithDiscard < currentPoints) {
             discard.pop();
             hand.addCard(topDiscard);
             System.out.printf("%s roba del descarte: %s%n", name, topDiscard);
         } else {
-            hand.addCard(deckCard);
+            hand.addCard(deck.takeCard());
             System.out.printf("%s roba del mazo.%n", name);
         }
 
@@ -99,7 +94,7 @@ public class AIPlayer extends Player {
 
     /**
      * Calcula automáticamente los mejores grupos de combinación.
-     * Si puede cerrar (6 o 7 combinadas), descarta la carta suelta y devuelve los grupos.
+     * Si puede cerrar (6 o 7 combinadas), descarta la carta suelta con valor entre 1 y 5 y devuelve los grupos.
      * Si no puede cerrar, devuelve {@code null}.
      *
      * @param roundNumber número de ronda actual
@@ -113,6 +108,7 @@ public class AIPlayer extends Player {
         List<Card> combinedCards;
         List<Card> looseCards;
         boolean canClose;
+        boolean validDiscardRange;
         Card worst;
 
         groups = findBestGroups();
@@ -125,10 +121,19 @@ public class AIPlayer extends Player {
         looseCards = new ArrayList<>(hand.getHand());
         looseCards.removeAll(combinedCards);
 
+        
+        validDiscardRange = true;
+        for (Card card : looseCards) {
+            if (card.getNumber().getValue() < 1 || card.getNumber().getValue() > 5) {
+                validDiscardRange = false;
+            }
+        }
+        
         canClose = (looseCards.size() == 1 && combinedCards.size() == 7)
                 || (looseCards.size() == 2 && combinedCards.size() == 6);
 
-        if (!canClose || !validator.isValidCombination(groups)) {
+        
+        if (!canClose || !validDiscardRange || !validator.isValidCombination(groups)) {
             return null;
         }
 
