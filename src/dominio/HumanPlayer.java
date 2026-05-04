@@ -3,185 +3,269 @@ package dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa un jugador humano en el Chinchón.
+ * Interactúa con el usuario a través de {@link ConsoleInput} para tomar decisiones
+ * en cada fase del turno: robar, descartar o intentar cerrar con combinaciones.
+ */
 public class HumanPlayer extends Player {
-
-	public HumanPlayer(String name) {
-		super(name);
-	}
-
 	
+	private final ConsoleInput input;
+    /**
+     * Construye un jugador humano con el nombre indicado.
+     *
+     * @param name nombre del jugador 
+     * @param input gestor de entrada por consola
+     */
+    public HumanPlayer(String name, ConsoleInput input) {
+		super(name);
+        this.input = input;
 
-	public boolean takingPhase(Deck deck, DiscardDeck discard, int roundNumber) {
-		ConsoleInput input = ConsoleInput.getInstance();
-		int option;
-		Card taken;
+    }
 
-		hand.showCards();
+    /**
+     * Fase de robo del turno humano.
+     * Muestra la mano y comprueba si hay chinchón antes de robar.
+     * Si no hay chinchón, pregunta al jugador de dónde quiere robar.
+     *
+     * @param deck        mazo principal
+     * @param discard     montón de descarte
+     * @param roundNumber número de ronda actual
+     * @return {@code true} si el jugador tiene chinchón válido
+     */
+    @Override
+    protected boolean takingPhase(Deck deck, DiscardDeck discard, int roundNumber) {
+       
+        int option;
+        Card taken;
 
-		if (new CombinationValidator().isChinchon(hand.getHand(), roundNumber)) {
-			 
-				System.out.println("¡CHINCHÓN! Ganas la partida.");
-				lastCombination = new ArrayList<>();
-				lastCombination.add(new ArrayList<>(hand.getHand()));
-				return true;
-			}
-		
+        hand.showCards();
 
-		System.out.printf("Carta visible del descarte: %s%n", discard.getTopCardStr());
-		System.out.println("¿De dónde robas?");
-		System.out.println("1. Mazo");
-		System.out.println("2. Descarte");
+        if (validator.isChinchon(hand.getHand())) {
+            if (roundNumber == 1) {
+                System.out.println("Tienes chinchón pero no puedes usarlo en la primera ronda.");
+            } else {
+                System.out.println("¡CHINCHÓN! Ganas la partida.");
+                lastCombination = new ArrayList<>();
+                lastCombination.add(new ArrayList<>(hand.getHand()));
+                chinchon = true;
+                return true;
+            }
+        }
 
-		option = input.readIntInRange(1, 2);
-		taken = (option == 1) ? deck.takeCard() : discard.pop();
+        System.out.printf("Carta visible del descarte: %s%n", discard.getTopCardStr());
+        System.out.println("¿De dónde robas?");
+        System.out.println("1. Mazo");
+        System.out.println("2. Descarte");
 
-		System.out.printf("Has robado: %s%n", taken);
-		hand.addCard(taken);
+        option = input.readIntInRange(1, 2);
+        taken = (option == 1) ? deck.takeCard() : discard.pop();
 
-		return false;
-	}
+        System.out.printf("Has robado: %s%n", taken);
+        hand.addCard(taken);
 
-	public boolean closingPhase(DiscardDeck discard, int roundNumber) {
-		ConsoleInput input = ConsoleInput.getInstance();
-		List<List<Card>> groups;
-		int option;
+        return false;
+    }
 
-		do {
-			hand.showCards();
-			System.out.println("¿Qué quieres hacer?");
-			System.out.println("1. Descartar una carta");
-			System.out.println("2. Intentar cerrar");
+    /**
+     * Fase de cierre o descarte del turno humano.
+     * Muestra las opciones disponibles y gestiona la decisión del jugador.
+     * Si el jugador intenta cerrar con una combinación inválida, vuelve a mostrar el menú.
+     *
+     * @param discard     montón de descarte
+     * @param roundNumber número de ronda actual
+     * @return {@code true} si el jugador cierra la ronda correctamente
+     */
+    @Override
+    protected boolean closingPhase(DiscardDeck discard, int roundNumber) {
+       
+        List<List<Card>> groups;
+        int option;
 
-			option = input.readIntInRange(1, 2);
+        do {
+            hand.showCards();
+            System.out.println("¿Qué quieres hacer?");
+            System.out.println("1. Descartar una carta");
+            System.out.println("2. Intentar cerrar");
 
-			if (option == 1) {
-				discardCard(discard);
-				return false;
-			}
+            option = input.readIntInRange(1, 2);
 
-			groups = chooseCombination(roundNumber, discard);
+            if (option == 1) {
+                discardCard(discard);
+                return false;
+            }
 
-			if (groups == null) {
-				System.out.println("Combinación no válida, elige otra opción.");
-			}
+            groups = chooseCombination(roundNumber, discard);
 
-		} while (groups == null);
+            if (groups == null) {
+                System.out.println("Combinación no válida, elige otra opción.");
+            }
 
-		return true;
-	}
+        } while (groups == null);
 
-	private void discardCard(DiscardDeck discard) {
-		ConsoleInput input = ConsoleInput.getInstance();
-		Card discarded;
-		int index;
+        return true;
+    }
 
-		System.out.println("Elige la carta a descartar:");
-		index = input.readIntInRange(1, hand.numCards());
-		discarded = hand.removeCard(index - 1);
-		discard.push(discarded);
+    /**
+     * Pide al jugador que elija una carta de su mano para descartar.
+     *
+     * @param discard montón de descarte donde se coloca la carta
+     */
+    private void discardCard(DiscardDeck discard) {
+        
+        Card discarded;
+        int index;
 
-		System.out.printf("Has descartado: %s%n", discarded);
-	}
+        System.out.println("Elige la carta a descartar:");
+        index = input.readIntInRange(1, hand.numCards());
+        discarded = hand.removeCard(index - 1);
+        discard.push(discarded);
 
-	@Override
-	public List<List<Card>> chooseCombination(int roundNumber, DiscardDeck discard) {
-		List<Card> handBackup;
-		List<List<Card>> groups;
-		List<Card> combinedCards = new ArrayList<>();
-		List<Card> looseCards;
+        System.out.printf("Has descartado: %s%n", discarded);
+    }
 
-		handBackup = createHandBackup();
-		groups = selectGroups();
+    /**
+     * Permite al jugador seleccionar grupos de combinación para intentar cerrar.
+     * Realiza una copia de seguridad de la mano antes de extraer cartas
+     * y la restaura si la combinación no es válida.
+     *
+     * @param roundNumber número de ronda actual
+     * @param discard     montón de descarte, usado para la carta suelta al cerrar
+     * @return lista de grupos combinados válidos, o {@code null} si el cierre no es válido
+     */
+    @Override
+    protected List<List<Card>> chooseCombination(int roundNumber, DiscardDeck discard) {
+        List<Card> handBackup;
+        List<List<Card>> groups;
+        List<Card> combinedCards = new ArrayList<>();
+        List<Card> looseCards;
 
-		for (List<Card> group : groups) {
-			combinedCards.addAll(group);
-		}
+        handBackup = createHandBackup();
+        groups = selectGroups();
 
-		looseCards = new ArrayList<>(handBackup);
-		looseCards.removeAll(combinedCards);
+        for (List<Card> group : groups) {
+            combinedCards.addAll(group);
+        }
 
-		if (!isValidClose(combinedCards, looseCards, discard)) {
-			restoreHand(handBackup);
-			return null;
-		}
+        looseCards = new ArrayList<>(handBackup);
+        looseCards.removeAll(combinedCards);
 
-		if (!new CombinationValidator().isValidCombination(groups)) {
-			restoreHand(handBackup);
-			return null;
-		}
+        if (!isValidClose(combinedCards, looseCards, discard)) {
+            restoreHand(handBackup);
+            return null;
+        }
 
-		lastCombination = groups;
-		return groups;
-	}
+        if (!validator.isValidCombination(groups)) {
+            restoreHand(handBackup);
+            return null;
+        }
 
-	private boolean isValidClose(List<Card> combined, List<Card> loose, DiscardDeck discard) {
-		ConsoleInput input = ConsoleInput.getInstance();
-		int option;
-		Card discarded;
+        lastCombination = groups;
+        return groups;
+    }
 
-		if (loose.size() == 1 && combined.size() == 7) {
-			discard.push(loose.get(0));
-			System.out.printf("Cierre perfecto. Carta descartada: %s%n", loose.get(0));
-			return true;
-		}
+    /**
+     * Valida si el jugador puede cerrar según el número de cartas combinadas y sueltas.
+     * <ul>
+     *   <li>7 combinadas + 1 suelta: cierre perfecto, la suelta se descarta automáticamente.</li>
+     *   <li>6 combinadas + 2 sueltas: el jugador elige cuál descartar; la elegida debe valer 1-5.</li>
+     * </ul>
+     *
+     * @param combined lista de cartas combinadas
+     * @param loose    lista de cartas no combinadas
+     * @param discard  montón de descarte
+     * @return {@code true} si el cierre es válido
+     */
+    private boolean isValidClose(List<Card> combined, List<Card> loose, DiscardDeck discard) {
+        
+        int option;
+        Card discarded;
 
-		if (loose.size() == 2 && combined.size() == 6) {
-			System.out.printf("Elige cuál descartar:%n");
-			System.out.printf("1. %s%n", loose.get(0));
-			System.out.printf("2. %s%n", loose.get(1));
-			option = input.readIntInRange(1, 2);
-			discarded = loose.get(option - 1);
-			discard.push(discarded);
-			System.out.printf("Carta descartada: %s%n", discarded);
-			return true;
-		}
+        if (loose.size() == 1 && combined.size() == 7) {
+            discard.push(loose.get(0));
+            System.out.printf("Cierre perfecto. Carta descartada: %s%n", loose.get(0));
+            return true;
+        }
 
-		System.out.println("Debes combinar 6 o 7 cartas para cerrar.");
-		return false;
-	}
+        if (loose.size() == 2 && combined.size() == 6) {
+            System.out.printf("Elige cuál descartar:%n");
+            System.out.printf("1. %s%n", loose.get(0));
+            System.out.printf("2. %s%n", loose.get(1));
+            option = input.readIntInRange(1, 2);
+            discarded = loose.get(option - 1);
 
-	private List<List<Card>> selectGroups() {
-		ConsoleInput input = ConsoleInput.getInstance();
-		List<List<Card>> groups = new ArrayList<>();
-		boolean newGroup;
-		List<Card> group;
-		int index;
+            if (discarded.getNumber().getValue() > 5) {
+                System.out.println("No puedes cerrar: la carta de descarte debe ser <= 5.");
+                return false;
+            }
+            discard.push(discarded);
+            System.out.printf("Carta descartada: %s%n", discarded);
+            return true;
+        }
 
-		do {
-			group = new ArrayList<>();
+        System.out.println("Debes combinar 6 o 7 cartas para cerrar.");
+        return false;
+    }
 
-			do {
-				hand.showCards();
-				System.out.println("Elige las cartas a combinar (0 para terminar grupo):");
-				index = input.readInt();
+    /**
+     * Permite al jugador seleccionar grupos de cartas de su mano de forma interactiva.
+     * Muestra la mano actualizada tras cada selección y permite múltiples grupos.
+     *
+     * @return lista de grupos de cartas seleccionados por el jugador
+     */
+    private List<List<Card>> selectGroups() {
+        
+        List<List<Card>> groups = new ArrayList<>();
+        boolean newGroup;
+        List<Card> group;
+        int index;
 
-				if (index != 0) {
-					if (index < 1 || index > hand.numCards()) {
-						System.out.printf("Índice no válido, elige entre 1 y %d", hand.numCards());
-					} else {
-						group.add(hand.removeCard(index - 1));
-					}
-				}
+        do {
+            group = new ArrayList<>();
 
-			} while (index != 0);
+            do {
+                hand.showCards();
+                System.out.println("Elige las cartas a combinar (0 para terminar grupo):");
+                index = input.readInt();
 
-			groups.add(group);
+                if (index != 0) {
+                    if (index < 1 || index > hand.numCards()) {
+                        System.out.printf("Índice no válido, elige entre 1 y %d%n", hand.numCards());
+                    } else {
+                        group.add(hand.removeCard(index - 1));
+                    }
+                }
 
-			hand.showCards();
-			System.out.println("¿Quieres combinar otro grupo? (s/n)");
-			newGroup = input.readBooleanUsingChar('s', 'n');
+            } while (index != 0);
 
-		} while (newGroup);
+            groups.add(group);
 
-		return groups;
-	}
+            hand.showCards();
+            System.out.println("¿Quieres combinar otro grupo? (s/n)");
+            newGroup = input.readBooleanUsingChar('s', 'n');
 
-	private List<Card> createHandBackup() {
-		return new ArrayList<>(hand.getHand());
-	}
+        } while (newGroup);
 
-	private void restoreHand(List<Card> backup) {
-		hand.getHand().clear();
-		hand.getHand().addAll(backup);
-	}
+        return groups;
+    }
+
+    /**
+     * Crea una copia de seguridad de las cartas actuales de la mano.
+     *
+     * @return lista con las cartas actuales de la mano
+     */
+    private List<Card> createHandBackup() {
+        return new ArrayList<>(hand.getHand());
+    }
+
+    /**
+     * Restaura la mano del jugador a partir de una copia de seguridad.
+     * Se usa cuando una combinación resulta inválida.
+     *
+     * @param backup lista de cartas con la que restaurar la mano
+     */
+    private void restoreHand(List<Card> backup) {
+        hand.getHand().clear();
+        hand.getHand().addAll(backup);
+    }
 }
