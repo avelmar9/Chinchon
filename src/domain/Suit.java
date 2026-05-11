@@ -1,4 +1,4 @@
-package dominio;
+package domain;
 
 /**
  * Representa los cuatro palos de la baraja española.

@@ -1,4 +1,4 @@
-package dominio;
+package domain;
 
 /**
  * Gestiona la configuración inicial de la partida a través de la consola.

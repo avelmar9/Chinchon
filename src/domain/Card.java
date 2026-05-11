@@ -1,4 +1,4 @@
-package dominio;
+package domain;
 
 /**
  * Representa una carta de la baraja española.

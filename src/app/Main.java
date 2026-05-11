@@ -1,9 +1,9 @@
 package app;
 
-import dominio.ConsoleInput;
-import dominio.Game;
-import dominio.GameSetUp;
-import dominio.GameSetUpBuilder;
+import domain.ConsoleInput;
+import domain.Game;
+import domain.GameSetUp;
+import domain.GameSetUpBuilder;
 
 /**
  * Punto de entrada de la aplicación del juego Chinchón.

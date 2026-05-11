@@ -1,4 +1,4 @@
-package dominio;
+package domain;
 
 import java.util.Comparator;
 import java.util.List;
