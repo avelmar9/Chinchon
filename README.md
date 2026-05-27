@@ -115,7 +115,7 @@ Un jugador puede cerrar la ronda en su turno (después de robar y justo al desca
 # Explicación de las clases
 
 ## Main
-src/app/Main.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/app/Main.java)
 
 Clase principal del proyecto.
 
@@ -128,7 +128,7 @@ Responsabilidades:
 ---
 
 ## Card
-src/domain/Card.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Card.java)
 
 Representa una carta de la baraja española.
 
@@ -145,7 +145,7 @@ Funciones:
 ---
 
 ## Suit
-src/domain/Suit.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Suit.java)
 
 Enumeración que representa los palos de la baraja española.
 
@@ -159,7 +159,7 @@ Ejemplos:
 ---
 
 ## Value
-src/domain/Value.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Value.java)
 
 Enumeración que representa los valores posibles de las cartas.
 
@@ -179,7 +179,7 @@ Incluye además el valor numérico utilizado para validar escaleras.
 ---
 
 ## Deck
-src/domain/Deck.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Deck.java)
 
 Representa el mazo principal del juego.
 
@@ -193,7 +193,7 @@ Responsabilidades:
 ---
 
 ## DiscardDeck
-src/domain/DiscardDeck.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/DiscardDeck.java)
 
 Representa el montón de descarte.
 
@@ -206,7 +206,7 @@ Funciones:
 ---
 
 ## Hand
-src/domain/Hand.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Hand.java)
 
 Representa la mano de un jugador.
 
@@ -220,7 +220,7 @@ Funciones:
 ---
 
 ## Player
-src/domain/Player.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Player.java)
 
 Clase base de los jugadores.
 
@@ -235,7 +235,7 @@ Define el comportamiento general de cualquier jugador.
 ---
 
 ## HumanPlayer
-src/domain/HumanPlayer.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/HumanPlayer.java)
 
 Jugador controlado por una persona.
 
@@ -248,7 +248,7 @@ Responsabilidades:
 ---
 
 ## AIPlayer
-src/domain/AIPlayer.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/AIPlayer.java)
 
 Jugador automático controlado por la máquina.
 
@@ -261,7 +261,7 @@ Funciones:
 ---
 
 ## Round
-src/domain/Round.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Round.java)
 
 Controla el desarrollo de una ronda.
 
@@ -274,7 +274,7 @@ Responsabilidades:
 ---
 
 ## Game
-src/domain/Game.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/Game.java)
 
 Clase principal de lógica del juego.
 
@@ -288,7 +288,7 @@ Funciones:
 ---
 
 ## GameSetUp
-src/domain/GameSetUp.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/GameSetUp.java)
 
 Representa la configuración inicial de la partida.
 
@@ -301,7 +301,7 @@ Puede incluir:
 ---
 
 ## GameSetUpBuilder
-src/domain/GameSetUpBuilder.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/GameSetUpBuilder.java)
 
 Implementa el patrón Builder para crear configuraciones de partida de forma flexible.
 
@@ -314,7 +314,7 @@ Ventajas:
 ---
 
 ## ConsoleInput
-src/domain/ConsoleInput.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/ConsoleInput.java)
 
 Clase auxiliar para leer datos desde consola.
 
@@ -327,7 +327,7 @@ Funciones:
 ---
 
 ## CombinationValidator
-src/domain/CombinationValidator.java
+[Ver código](https://github.com/avelmar9/Chinchon/blob/master/src/domain/CombinationValidator.java)
 
 Clase encargada de validar combinaciones de cartas.
 
